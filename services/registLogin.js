@@ -19,7 +19,7 @@ class registLogin{
                 console.log(rows[0]);
                 data=rows.map(item=>{
                     let op={};
-                    Object.assign(op,row);
+                    Object.assign(op,item);
                     console.log(op);
                     return op;
                 })
@@ -27,7 +27,24 @@ class registLogin{
             .catch(e => {
                 console.log(e);
             })
-            return data;
+            return data[0];
+    }
+    async vali(num){
+        let con=true;
+        await db.exec('select * from lppz where phone = ? ',num)
+            .then(rows=>{
+                console.log(rows[0]);
+                //con=true时，说明这个新手机号是可以注册的；为false时，说明该手机号已被注册过了
+                if(rows[0]){
+                    con=false;  
+                }else{
+                    con=true;
+                }
+            })
+            .catch(e=>{
+                console.log(e);
+            })
+        return con;
     }
 }
 module.exports=new registLogin();
